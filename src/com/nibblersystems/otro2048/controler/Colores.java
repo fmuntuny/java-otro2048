@@ -1,0 +1,16 @@
+package com.nibblersystems.otro2048.controler;
+
+public enum Colores {
+    CERO,
+    DOS,
+    CUATRO,
+    OCHO,
+    DIECISEIS,
+    TREINTAYDOS,
+    SESENTAYCUATRO,
+    CIENTOVEINTIOCHO,
+    DOSCIENTOSCINCUENTAYSEIS,
+    QUINIENTOSDOCE,
+    MILVEINTICUATRO,
+    DOSMILCUARENTAYOCHO;
+}
