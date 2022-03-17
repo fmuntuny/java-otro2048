@@ -44,17 +44,8 @@ public class FrmGameOver extends JFrame implements KeyListener {
     public void keyPressed(KeyEvent e) {
         String[] args = new String[0];
         switch (e.getKeyCode()) {
-            case (38): {//ARRIBA
+            case (10): {//ENTER
                 Otro2048.abrirNuevoJuego(args);
-                break;
-            }
-            case (40): {//ABAJO
-                break;
-            }
-            case (39): {//DERECHA
-                break;
-            }
-            case (37): {//IZQUIERDA
                 break;
             }
         }

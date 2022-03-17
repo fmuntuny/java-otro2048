@@ -4,9 +4,6 @@
  */
 package com.nibblersystems.otro2048.controler;
 
-import com.nibblersystems.otro2048.gui.FrmGameOver;
-import com.nibblersystems.otro2048.gui.FrmWin;
-
 public class Tablero {
     private Cuadrado[][] arrCuadrados = new Cuadrado[4][4];
     private boolean gameOver = false;
@@ -15,20 +12,34 @@ public class Tablero {
     private int puntos = 0;
     private int puntosTemp = 0;
     private boolean gano = false;
+    private Cuadrado cuadrado;
 
     public Tablero() { //GENERA UN NUEVO TABLERO PARA EMPEZAR EL JUEGO DESDE CERO
         for (int i = 0; i < this.arrCuadrados[0].length; i++) {
             for (int j = 0; j < this.arrCuadrados[0].length; j++) {
-                this.arrCuadrados[i][j] = new Cuadrado();
-                this.arrCuadrados[i][j].setValorCuadrado("0");
+                this.arrCuadrados[i][j] = new Cuadrado("0");
             }
         }
         this.setNewCuadrado("2");
         this.setNewCuadrado("2");
     }
 
+    public void getNewTablero(){
+        for (int i = 0; i < this.arrCuadrados[0].length; i++) {
+            for (int j = 0; j < this.arrCuadrados[0].length; j++) {
+                this.arrCuadrados[i][j] = new Cuadrado("0");
+            }
+        }
+        this.setNewCuadrado("2");
+        this.setNewCuadrado("2");
+        this.setPuntos(0);
+        this.setMovidas(0);
+        this.setGano(false);
+        this.setGameOver(false);
+    }
+
     /////////////////////////////////////////////////ESTO ES PARA HACER PRUEBAS////////////////////////////////////////////////////////////////
-    public Tablero(int cantNewCuadrados) { //GENERA UN NUEVO TABLERO ALEATOREO PARA PRUEBAS
+    /*public Tablero(int cantNewCuadrados) { //GENERA UN NUEVO TABLERO ALEATOREO PARA PRUEBAS
         for (int i = 0; i < this.getLargoArray(); i++) {
             for (int j = 0; j < this.getLargoArray(); j++) {
                 this.arrCuadrados[i][j] = new Cuadrado();
@@ -61,13 +72,9 @@ public class Tablero {
         this.getArrCuadrados()[2][0].setValorCuadrado(y);
         this.getArrCuadrados()[3][0].setValorCuadrado(z);
         this.dibujarTablero();
-    }
+    }*/
     /////////////////////////////////////////////////ESTO ES PARA HACER PRUEBAS////////////////////////////////////////////////////////////////
 
-
-    public void setArrCuadrados(Cuadrado[][] arrCuadrados) {
-        this.arrCuadrados = arrCuadrados;
-    }
 
     public Cuadrado[][] getArrCuadrados() {
         return this.arrCuadrados;
@@ -125,7 +132,7 @@ public class Tablero {
             for (int j = 0; j < this.getLargoArray(); j++) {
                 if (this.getArrCuadrados()[i][j].getValorCuadrado().equals("2048")) {
                     this.setGano(true);
-                    Otro2048.getFrmGameOver().setVisible(true);
+                    Otro2048.getFrmWin().setVisible(true);
                 }
                 if (this.getValorCuadrado(i, j).equals("0")) {
                     arrCuadradosVacios[contVacios] = String.valueOf(i) + String.valueOf(j);
@@ -133,17 +140,21 @@ public class Tablero {
                 }
             }
         }
-        if (contVacios == 1) {
+        if (contVacios < 2) {
             this.setGameOver(true);
         } else {
             double indiceVacioI = Math.random() * contVacios;
             String indiceVacioIStr = String.valueOf(indiceVacioI - (indiceVacioI % 1));
             indiceVacioIStr = indiceVacioIStr.substring(0, indiceVacioIStr.lastIndexOf("."));
-            arrCuadrados[Integer.parseInt(arrCuadradosVacios[Integer.parseInt(indiceVacioIStr)].substring(0, 1))][Integer.parseInt((arrCuadradosVacios[Integer.parseInt((indiceVacioIStr))].substring(1, 2)))].setValorCuadrado(valorCuadrado);
+            int indiceI = Integer.parseInt(arrCuadradosVacios[Integer.parseInt(indiceVacioIStr)].substring(0, 1));
+            int indiceJ = Integer.parseInt((arrCuadradosVacios[Integer.parseInt((indiceVacioIStr))].substring(1, 2)));
+            this.arrCuadrados[indiceI][indiceJ].setValorCuadrado(valorCuadrado);
         }
     }
 
     public void dibujarTablero() {
+
+        Otro2048.getFrmTablero().actualizaFrmTablero(this.arrCuadrados);
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
@@ -151,8 +162,7 @@ public class Tablero {
                 if (dato.equals("0")) {
                     dato = "";
                 }
-                sb.append(dato)
-                        .append("\t");
+                sb.append(dato).append("\t");
                 if (j == 3) {
                     sb.append("\n");
                 }
@@ -406,8 +416,8 @@ public class Tablero {
             this.setMovidas(1);
             if (this.getGameOver() == true) {
                 Otro2048.getFrmGameOver().setVisible(true);
-
             }
+            Otro2048.getFrmTablero().actualizaFrmTablero(this.arrCuadrados);
         }
     }
 
@@ -415,7 +425,7 @@ public class Tablero {
         Cuadrado[][] arrTemp = new Cuadrado[4][4];
         for (int i = 0; i < arrTemp[0].length; i++) {
             for (int j = 0; j < arrTemp[0].length; j++) {
-                arrTemp[i][j] = new Cuadrado();
+                arrTemp[i][j] = new Cuadrado("0");
                 arrTemp[i][j].setValorCuadrado("0");
             }
         }
@@ -464,34 +474,4 @@ public class Tablero {
         this.rotarTablero90Derecha();
         this.dibujarTablero();
     }
-
-//PRUEBA QUE NO FUNCIONA CORRECTAMENTE PORQUE ME PARECE QUE ES PARA MATRICES IMPARES
- /*   public void rotarTablero90Derecha() {
-        int n = this.getArrCuadrados()[0].length;
-        Cuadrado[][] matrix = this.getArrCuadrados();
-        for(int i = 0; i<(n/2); i++){
-            for(int j=i; j<n-1-i;j++){
-                String t = matrix[i][j].getValorCuadrado();
-                matrix[i][j]=matrix[n-1-j][i];
-                matrix[n-1-j][i]=matrix[n-1-i][n-1-j];
-                matrix[n-1-i][n-1-j]=matrix[j][n-1-i];
-                matrix[j][n-1-i].setValorCuadrado(t);
-            }
-        }
-    this.dibujarTablero();
-    }*/
-
-
-    //EJEMPLO ROTAR ARRAY 90 GRADOS A LA DERECHA
-/*    int n=matrix.length
-    for(int i = 0; i<(n/2); i++){
-        for(int j=i; j<n-1-i;j++){
-            int t = matrix[i][j]:
-            matrix[i][j]=matrix[n-1-i][i]
-            matrix[n-1-j][j]=matrix[n-1-i][n-1-j]
-            matrix[n-1-i][n-1-j]=matrix[j][n-1-i]
-            matrix[j][n-1-i]=t
-        }
-    }*/
-
 }

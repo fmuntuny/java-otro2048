@@ -1,5 +1,8 @@
 package com.nibblersystems.otro2048.gui;
 
+import com.nibblersystems.otro2048.controler.Cuadrado;
+import com.nibblersystems.otro2048.controler.Otro2048;
+import com.nibblersystems.otro2048.controler.SpecCuadrado;
 import com.nibblersystems.otro2048.controler.Tablero;
 
 import javax.swing.*;
@@ -11,140 +14,102 @@ import java.awt.event.KeyListener;
 
 public class FrmTablero extends JFrame implements KeyListener, ActionListener {
 
-    private JLabel i0j0;
-    private JLabel i0j1;
-    private JLabel i0j2;
-    private JLabel i0j3;
-    private JLabel i1j0;
-    private JLabel i1j1;
-    private JLabel i1j2;
-    private JLabel i1j3;
-    private JLabel i2j0;
-    private JLabel i2j1;
-    private JLabel i2j2;
-    private JLabel i2j3;
-    private JLabel i3j0;
-    private JLabel i3j1;
-    private JLabel i3j2;
-    private JLabel i3j3;
-    private JPanel JPTablero;
-    private JLabel LblPuntos;
-    private JLabel Puntos;
-    private JLabel LblMovidas;
-    private JLabel Movidas;
-    private static Tablero tableroForm = new Tablero();
+
+    private JPanel JPHeader = new JPanel();
+    private JPanel JPTablero = new JPanel();
+    private JLabel lblPuntos = new JLabel("<html><center>Puntos: 0   Movidas: 0</center></html>");
+    private Tablero tablero = new Tablero();
 
     public FrmTablero(Tablero tablero) {
         super("Otro 2048");
+        this.tablero = tablero;
+        ImageIcon icono = new ImageIcon("/images/Icono2048.ico");
+        this.setIconImage(icono.getImage());
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setSize(700, 700);
+        this.setSize(466, 564);
+        this.setResizable(false);
+
+        JPHeader.setBackground(new Color(255, 200, 120));
+        JPTablero.setBackground(new Color(255, 230, 200));
+        JPHeader.setBounds(0, 0, 450, 75);
+        JPTablero.setBounds(0, 75, 450, 450);
+        lblPuntos.setFont(new Font("MV Boli", Font.BOLD, 26));
+        JPHeader.add(lblPuntos);
+        JPTablero.setLayout(new GridLayout(4, 4));
         this.setLayout(null);
-        tableroForm = tablero;
-        setContentPane(JPTablero);
-        this.actualizaFrmTablero(tableroForm);
+        this.add(JPHeader);
+        this.add(JPTablero);
+        this.actualizaFrmTablero(tablero.getArrCuadrados());
         this.addKeyListener(this);
         this.setVisible(true);
     }
 
-    public void actualizaFrmTablero(Tablero tablero) {
-        i0j0.setText(tablero.getArrCuadrados()[0][0].getValorCuadrado());
-        if (tablero.getArrCuadrados()[0][0].getValorCuadrado().equals("0")) {
-            i0j0.setForeground(new Color(0, 0, 0, 1));
-        } else {
-            i0j0.setForeground(Color.darkGray);
+    public JLabel formateoJlabel(Cuadrado cuadrado) {
+        int index=0;
+        switch (cuadrado.getValorCuadrado()){
+            case("0"):
+                index = 0;
+                break;
+            case("2"):
+                index =1;
+                break;
+            case("4"):
+                index =2;
+                break;
+            case("8"):
+                index =3;
+                break;
+            case("16"):
+                index =4;
+                break;
+            case("32"):
+                index =5;
+                break;
+            case("64"):
+                index =6;
+                break;
+            case("128"):
+                index =7;
+                break;
+            case("256"):
+                index =8;
+                break;
+            case("512"):
+                index =9;
+                break;
+            case("1024"):
+                index =10;
+                break;
+            case("2048"):
+                index =11;
+                break;
         }
-        i0j1.setText(tablero.getArrCuadrados()[0][1].getValorCuadrado());
-        if (tablero.getArrCuadrados()[0][1].getValorCuadrado().equals("0")) {
-            i0j1.setForeground(new Color(0, 0, 0, 1));
-        } else {
-            i0j1.setForeground(Color.darkGray);
+        cuadrado.setText(cuadrado.getValorCuadrado());
+        SpecCuadrado[] spec = SpecCuadrado.values();
+        cuadrado.setForeground(spec[index].getColorFuente());
+        cuadrado.setFont(new Font("MV Boli", Font.BOLD, 25));
+        cuadrado.setBackground(spec[index].getColorFondo());
+        cuadrado.setBorder(javax.swing.BorderFactory.createLineBorder(new Color(0, 0, 0)));
+        cuadrado.setOpaque(true);
+        cuadrado.setHorizontalAlignment(SwingConstants.CENTER);
+        cuadrado.setVerticalAlignment(SwingConstants.CENTER);
+        return cuadrado;
+    }
+
+    public void comenzarNuevoJuego(){
+        tablero.getNewTablero();
+    }
+
+    public void actualizaFrmTablero(Cuadrado[][] arrCuadrado) {
+        JPTablero.removeAll();
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                JPTablero.add(this.formateoJlabel(new Cuadrado(arrCuadrado[i][j].getValorCuadrado())));
+                JPTablero.validate();
+                JPTablero.repaint();
+            }
         }
-        i0j2.setText(tablero.getArrCuadrados()[0][2].getValorCuadrado());
-        if (tablero.getArrCuadrados()[0][2].getValorCuadrado().equals("0")) {
-            i0j2.setForeground(new Color(0, 0, 0, 1));
-        } else {
-            i0j2.setForeground(Color.darkGray);
-        }
-        i0j3.setText(tablero.getArrCuadrados()[0][3].getValorCuadrado());
-        if (tablero.getArrCuadrados()[0][3].getValorCuadrado().equals("0")) {
-            i0j3.setForeground(new Color(0, 0, 0, 1));
-        } else {
-            i0j3.setForeground(Color.darkGray);
-        }
-        i1j0.setText(tablero.getArrCuadrados()[1][0].getValorCuadrado());
-        if (tablero.getArrCuadrados()[1][0].getValorCuadrado().equals("0")) {
-            i1j0.setForeground(new Color(0, 0, 0, 1));
-        } else {
-            i1j0.setForeground(Color.darkGray);
-        }
-        i1j1.setText(tablero.getArrCuadrados()[1][1].getValorCuadrado());
-        if (tablero.getArrCuadrados()[1][1].getValorCuadrado().equals("0")) {
-            i1j1.setForeground(new Color(0, 0, 0, 1));
-        } else {
-            i1j1.setForeground(Color.darkGray);
-        }
-        i1j2.setText(tablero.getArrCuadrados()[1][2].getValorCuadrado());
-        if (tablero.getArrCuadrados()[1][2].getValorCuadrado().equals("0")) {
-            i1j2.setForeground(new Color(0, 0, 0, 1));
-        } else {
-            i1j2.setForeground(Color.darkGray);
-        }
-        i1j3.setText(tablero.getArrCuadrados()[1][3].getValorCuadrado());
-        if (tablero.getArrCuadrados()[1][3].getValorCuadrado().equals("0")) {
-            i1j3.setForeground(new Color(0, 0, 0, 1));
-        } else {
-            i1j3.setForeground(Color.darkGray);
-        }
-        i2j0.setText(tablero.getArrCuadrados()[2][0].getValorCuadrado());
-        if (tablero.getArrCuadrados()[2][0].getValorCuadrado().equals("0")) {
-            i2j0.setForeground(new Color(0, 0, 0, 1));
-        } else {
-            i2j0.setForeground(Color.darkGray);
-        }
-        i2j1.setText(tablero.getArrCuadrados()[2][1].getValorCuadrado());
-        if (tablero.getArrCuadrados()[2][1].getValorCuadrado().equals("0")) {
-            i2j1.setForeground(new Color(0, 0, 0, 1));
-        } else {
-            i2j1.setForeground(Color.darkGray);
-        }
-        i2j2.setText(tablero.getArrCuadrados()[2][2].getValorCuadrado());
-        if (tablero.getArrCuadrados()[2][2].getValorCuadrado().equals("0")) {
-            i2j2.setForeground(new Color(0, 0, 0, 1));
-        } else {
-            i2j2.setForeground(Color.darkGray);
-        }
-        i2j3.setText(tablero.getArrCuadrados()[2][3].getValorCuadrado());
-        if (tablero.getArrCuadrados()[2][3].getValorCuadrado().equals("0")) {
-            i2j3.setForeground(new Color(0, 0, 0, 1));
-        } else {
-            i2j3.setForeground(Color.darkGray);
-        }
-        i3j0.setText(tablero.getArrCuadrados()[3][0].getValorCuadrado());
-        if (tablero.getArrCuadrados()[3][0].getValorCuadrado().equals("0")) {
-            i3j0.setForeground(new Color(0, 0, 0, 1));
-        } else {
-            i3j0.setForeground(Color.darkGray);
-        }
-        i3j1.setText(tablero.getArrCuadrados()[3][1].getValorCuadrado());
-        if (tablero.getArrCuadrados()[3][1].getValorCuadrado().equals("0")) {
-            i3j1.setForeground(new Color(0, 0, 0, 1));
-        } else {
-            i3j1.setForeground(Color.darkGray);
-        }
-        i3j2.setText(tablero.getArrCuadrados()[3][2].getValorCuadrado());
-        if (tablero.getArrCuadrados()[3][2].getValorCuadrado().equals("0")) {
-            i3j2.setForeground(new Color(0, 0, 0, 1));
-        } else {
-            i3j2.setForeground(Color.darkGray);
-        }
-        i3j3.setText(tablero.getArrCuadrados()[3][3].getValorCuadrado());
-        if (tablero.getArrCuadrados()[3][3].getValorCuadrado().equals("0")) {
-            i3j3.setForeground(new Color(0, 0, 0, 1));
-        } else {
-            i3j3.setForeground(Color.darkGray);
-        }
-        Puntos.setText(String.valueOf(tablero.getPuntos()));
-        Movidas.setText(String.valueOf(tablero.getMovidas()));
+        this.lblPuntos.setText("<html><center>Puntos: " + tablero.getPuntos() + "   Movidas: " + tablero.getMovidas()+ "</center></html>");
     }
 
     @Override
@@ -156,23 +121,19 @@ public class FrmTablero extends JFrame implements KeyListener, ActionListener {
     public void keyPressed(KeyEvent e) {
         switch (e.getKeyCode()) {
             case (38): {//ARRIBA
-                tableroForm.moverArriba();
-                this.actualizaFrmTablero(tableroForm);
+                this.tablero.moverArriba();
                 break;
             }
             case (40): {//ABAJO
-                tableroForm.moverAbajo();
-                this.actualizaFrmTablero(tableroForm);
+                this.tablero.moverAbajo();
                 break;
             }
             case (39): {//DERECHA
-                tableroForm.moverDerecha();
-                this.actualizaFrmTablero(tableroForm);
+                this.tablero.moverDerecha();
                 break;
             }
             case (37): {//IZQUIERDA
-                tableroForm.moverIzquierda();
-                this.actualizaFrmTablero(tableroForm);
+                this.tablero.moverIzquierda();
                 break;
             }
         }
@@ -185,7 +146,6 @@ public class FrmTablero extends JFrame implements KeyListener, ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        tableroForm = new Tablero();
-        actualizaFrmTablero(tableroForm);
+
     }
 }

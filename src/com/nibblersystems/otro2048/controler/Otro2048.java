@@ -8,7 +8,6 @@ import com.nibblersystems.otro2048.gui.FrmGameOver;
 import com.nibblersystems.otro2048.gui.FrmTablero;
 import com.nibblersystems.otro2048.gui.FrmWin;
 
-import java.util.Scanner;
 
 public class Otro2048 {
     private static Tablero tablero = new Tablero();
@@ -18,16 +17,16 @@ public class Otro2048 {
 
 
     public static void main(String[] args) {
-        Scanner scan = new Scanner(System.in);
         tablero.dibujarTablero();
     }
     public static void cerrarJuego(){
         System.exit(0);
     }
     public static void abrirNuevoJuego(String[] args) {
-        frmTablero.dispose();
-        frmGameOver.dispose();
-        frmWin.dispose();
+        tablero.getNewTablero();
+        frmTablero.setVisible(true);
+        frmGameOver.setVisible(false);
+        frmWin.setVisible(false);
         main(args);
 
     }
